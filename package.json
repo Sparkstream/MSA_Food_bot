@@ -1,0 +1,15 @@
+{
+  "name": "botapplication",
+  "version": "1.0.0",
+  "description": "Bot Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Phillip Quach",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.12.0",
+    "restify": "^6.3.2"
+  }
+}
