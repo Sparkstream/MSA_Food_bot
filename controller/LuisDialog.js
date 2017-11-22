@@ -1,5 +1,5 @@
 var builder = require('botbuilder');
-
+var food = require('./FavouriteFoods.js')
 
 exports.startDialog = function (bot) {
 
@@ -35,7 +35,6 @@ exports.startDialog = function (bot) {
     bot.dialog('DeleteFavourite', function(session,args){
         if(!isAttachment(session)){
             session.send("Now deleting your favourite food");
-
         }
     }).triggerAction({
         matches: 'DeleteFavourite'
@@ -62,7 +61,25 @@ exports.startDialog = function (bot) {
     });
 
     bot.dialog('GetFavouriteFood', [
-       // Insert favourite food logic here later
+        function (session, args, next) {
+            session.dialogData.args = args || {};        
+            if (!session.conversationData["username"]) {
+                builder.Prompts.text(session, "Enter a username to setup your account.");                
+            } else {
+                next(); // Skip if we already have this info.//executes function straight after this
+            }
+        },
+        function (session, results, next) {
+            if (!isAttachment(session)) {
+
+                if (results.response) {
+                    session.conversationData["username"] = results.response;
+                }
+
+                session.send("Retrieving your favourite foods");
+                food.displayFavouriteFood(session, session.conversationData["username"]);  // <---- THIS LINE HERE IS WHAT WE NEED 
+            }
+        }
     ]).triggerAction({
         matches: 'GetFavouriteFood'
     });
@@ -74,9 +91,14 @@ exports.startDialog = function (bot) {
     });
     
 
-    bot.dialog('WelcomeIntent', [
+    bot.dialog('WelcomeIntent', function(session,args){
+        if(!isAttachment(session)){
+            session.send("Hi, welcome to the MSA Food Bot. How may I help you today?");
+
+        }
+    
         // Insert logic here later
-    ]).triggerAction({
+    }).triggerAction({
         matches: 'WelcomeIntent'
     });
 }
