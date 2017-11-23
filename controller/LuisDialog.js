@@ -1,7 +1,8 @@
 var builder = require('botbuilder');
-var food = require('./FavouriteFoods.js');
+var food = require('./FavouriteFoods');
 var restaurant = require('./RestaurantCard');
 var nutrition = require('./NutritionCard');
+var customVision = require('./CustomVision');
 
 exports.startDialog = function (bot) {
 
@@ -35,7 +36,9 @@ exports.startDialog = function (bot) {
 
     });*/
 
-    bot.dialog('DeleteFavourite', [function (session, args, next) {
+    bot.dialog('DeleteFavourite', [
+        function (session, args, next) {
+        if(!isAttachment(session)){   
             session.dialogData.args = args || {};
             if (!session.conversationData["username"]) {
                 builder.Prompts.text(session, "Enter a username to setup your account.");
@@ -44,7 +47,8 @@ exports.startDialog = function (bot) {
                 next(); // Skip if we already have this info.
                 
             }
-        },
+        }
+    },
         function (session, results,next) {
             
         if (!isAttachment(session)) {
@@ -160,10 +164,13 @@ exports.startDialog = function (bot) {
 
 // Function is called when the user inputs an attachment
 function isAttachment(session) { 
+    
     var msg = session.message.text;
     if ((session.message.attachments && session.message.attachments.length > 0) || msg.includes("http")) {
+        //call custom vision
         
-        //call custom vision here later
+        customVision.retreiveMessage(session);
+
         return true;
     }
     else {
