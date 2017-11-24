@@ -2,7 +2,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var luis = require('./controller/LuisDialog');
 var cognitive = require('./controller/CustomVision');
-
+var qna = require('./controller/QnAMaker');
 // Some sections have been omitted
 
 // Setup Restify Server

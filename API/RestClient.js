@@ -73,6 +73,28 @@ exports.getYelpData = function getData(url,bearer,session, callback){
     });
 };
 
+exports.postQnAResults = function getData(url, session, question, callback){
+    var options = {
+        url: url,
+        method: 'POST',
+        headers: {
+            'Ocp-Apim-Subscription-Key': 'f56046a9652d4ee68b897ab9d102ae7a',
+            'Content-Type':'application/json'
+        },
+        json: {
+            "question" : question
+        }
+      };
+  
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            callback(body, session, question);
+        }
+        else{
+            console.log(error);
+        }
+      });
+  };
 exports.getNutritionData = function getData(url, session, foodName, callback){
     
         request.get(url, function(err,res,body){
@@ -83,3 +105,4 @@ exports.getNutritionData = function getData(url, session, foodName, callback){
             }
         });
     };
+
